@@ -15,6 +15,15 @@ clean-targets:
   - "target"
   - "dbt_packages"
 
+models:
+  dtc_brand_analytics:
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: view
+    marts:
+      +materialized: table
+
 seeds:
   dtc_brand_analytics:
     product_mapping:

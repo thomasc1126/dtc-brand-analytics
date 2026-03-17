@@ -1,0 +1,19 @@
+version: 2
+
+models:
+  - name: fct_retail_weekly_sales
+    description: >
+      Retail weekly sales at the item x week grain. Includes current year vs prior year
+      metrics for total, comp, non-comp, and dotcom channels plus inventory data.
+    columns:
+      - name: retail_weekly_sales_key
+        description: Surrogate key on week_ending_date + upc
+        tests:
+          - unique
+          - not_null
+      - name: week_ending_date
+        tests:
+          - not_null
+      - name: upc
+        tests:
+          - not_null

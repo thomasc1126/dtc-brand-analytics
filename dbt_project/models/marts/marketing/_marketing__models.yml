@@ -1,0 +1,96 @@
+version: 2
+
+models:
+  - name: fct_daily_ad_performance
+    description: >
+      Daily ad spend by platform joined with Shopify daily revenue for blended ROAS calculation.
+    columns:
+      - name: daily_ad_performance_key
+        description: Surrogate key on spend_date
+        tests:
+          - unique
+          - not_null
+      - name: spend_date
+        tests:
+          - unique
+          - not_null
+
+  - name: fct_facebook_ads_daily
+    description: >
+      Daily Facebook ads performance from the unified daily model (campaign + account level).
+    columns:
+      - name: facebook_ads_daily_key
+        description: Surrogate key on date + campaign + granularity
+        tests:
+          - unique
+          - not_null
+      - name: report_date_start
+        tests:
+          - not_null
+
+  - name: fct_facebook_ads_monthly_by_audience
+    description: >
+      Facebook ads aggregated by audience type and month from the monthly adset data.
+    columns:
+      - name: fb_monthly_audience_key
+        description: Surrogate key on audience_type + report_month
+        tests:
+          - unique
+          - not_null
+      - name: audience_type
+        tests:
+          - not_null
+
+  - name: fct_google_ads_search_monthly
+    description: >
+      Google Ads search keyword performance at the keyword_category x month grain.
+    columns:
+      - name: google_search_monthly_key
+        description: Surrogate key on report_month + keyword_category
+        tests:
+          - unique
+          - not_null
+      - name: report_month
+        tests:
+          - not_null
+
+  - name: fct_google_ads_shopping_monthly
+    description: >
+      Google Ads shopping product performance at the item x month grain.
+    columns:
+      - name: google_shopping_monthly_key
+        description: Surrogate key on report_month + item_id
+        tests:
+          - unique
+          - not_null
+      - name: report_month
+        tests:
+          - not_null
+
+  - name: fct_ga_source_medium_monthly
+    description: >
+      Google Analytics source/medium performance at the source_medium x month grain.
+    columns:
+      - name: ga_source_medium_key
+        description: Surrogate key on report_month + source_medium
+        tests:
+          - unique
+          - not_null
+      - name: source_medium
+        tests:
+          - not_null
+
+  - name: fct_monthly_channel_overview
+    description: >
+      Capstone mart: monthly overview combining Shopify revenue, ad spend, GA traffic,
+      and retail sales. Includes blended ROAS, blended CAC, and channel mix percentages.
+    columns:
+      - name: monthly_channel_overview_key
+        description: Surrogate key on report_month
+        tests:
+          - unique
+          - not_null
+      - name: report_month
+        tests:
+          - unique
+          - not_null

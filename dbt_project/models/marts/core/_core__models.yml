@@ -1,0 +1,86 @@
+version: 2
+
+models:
+  - name: dim_dates
+    description: >
+      Date dimension spanning 2019-01-01 to 2020-12-31 with day-of-week, weekend flag,
+      month, quarter, and year attributes.
+    columns:
+      - name: date_day
+        description: Calendar date
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_customers
+    description: >
+      Customer dimension with lifetime metrics, cohort month, and geographic attributes.
+      One row per customer_id.
+    columns:
+      - name: customer_id
+        description: Unique customer identifier
+        tests:
+          - unique
+          - not_null
+      - name: cohort_month
+        tests:
+          - not_null
+
+  - name: dim_products
+    description: >
+      Product dimension built from the product_mapping seed. One row per anonymized
+      product code with product family, form, pack size, and bundle flag.
+    columns:
+      - name: anonymized_product_code
+        description: Anonymized product identifier
+        tests:
+          - unique
+          - not_null
+      - name: product_family
+        tests:
+          - not_null
+
+  - name: fct_orders
+    description: >
+      Fact table at the order grain. Shopify orders enriched with order item aggregates
+      and customer lifetime metrics. Includes is_first_order flag for CAC analysis.
+    columns:
+      - name: order_key
+        description: Surrogate key for the order
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+      - name: order_status
+        tests:
+          - not_null
+
+  - name: fct_order_items
+    description: >
+      Fact table at the line item grain. Shopify order items with product mapping
+      attributes and surrogate key.
+    columns:
+      - name: order_item_key
+        description: Surrogate key for the order item
+        tests:
+          - not_null
+      - name: order_id
+        tests:
+          - not_null
+      - name: product_family
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['hair_vitamins', 'sleep_vitamins', 'womens_multi_vitamins', 'hair_vitamins_vegan', 'lash_vitamins', 'teeth_whitening']
+              config:
+                where: "product_mapping_status = 'matched'"
