@@ -11,7 +11,9 @@ spend_agg as (
         spend_date,
         sum(spend) as total_ad_spend,
         sum(case when platform = 'facebook' then spend else 0 end) as facebook_spend,
-        sum(case when platform = 'google' then spend else 0 end) as google_spend
+        sum(case when platform = 'google_ads' then spend else 0 end) as google_spend,
+        sum(case when platform = 'bing' then spend else 0 end) as bing_spend,
+        sum(case when platform = 'pinterest' then spend else 0 end) as pinterest_spend
     from ad_spend
     group by spend_date
 )
@@ -22,6 +24,8 @@ select
     s.total_ad_spend,
     s.facebook_spend,
     s.google_spend,
+    s.bing_spend,
+    s.pinterest_spend,
     dr.order_count,
     dr.revenue as shopify_revenue,
     dr.quantity,
