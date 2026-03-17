@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: stg_ga__source_medium_monthly
+    description: Staged GA source/medium monthly metrics
+    columns:
+      - name: source_medium
+        tests:
+          - not_null
+      - name: report_month
+        tests:
+          - not_null

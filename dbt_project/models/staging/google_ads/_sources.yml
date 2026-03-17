@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: google_ads
+    database: analytics-eng-project
+    schema: dtc_analytics_raw
+    tables:
+      - name: raw_google_ads_search_keywords
+        description: Google Ads search keyword performance (2019-2020)
+      - name: raw_google_ads_shopping_products
+        description: Google Ads shopping product performance (2019-2020)

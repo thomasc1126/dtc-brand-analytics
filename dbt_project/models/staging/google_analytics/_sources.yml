@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: google_analytics
+    database: analytics-eng-project
+    schema: dtc_analytics_raw
+    tables:
+      - name: raw_ga_source_medium_monthly
+        description: GA source/medium monthly traffic and revenue (2019-2020)

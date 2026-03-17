@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: retail
+    database: analytics-eng-project
+    schema: dtc_analytics_raw
+    tables:
+      - name: raw_retail_weekly_sales
+        description: Retail weekly sales by UPC (2019-2020)

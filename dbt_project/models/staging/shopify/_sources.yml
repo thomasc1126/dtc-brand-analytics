@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: shopify
+    database: analytics-eng-project
+    schema: dtc_analytics_raw
+    tables:
+      - name: raw_shopify_orders
+        description: All Shopify orders (2019-2020), one row per order
+      - name: raw_shopify_orders_core_commerce
+        description: Core commerce orders only (excludes VIP gifts, drafts, wholesale)
+      - name: raw_shopify_order_items
+        description: Order line items with product mapping, one row per line item

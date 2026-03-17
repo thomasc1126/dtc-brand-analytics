@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: stg_shopify__orders
+    description: Staged Shopify orders (core commerce only)
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - unique
+      - name: order_timestamp
+        tests:
+          - not_null
+
+  - name: stg_shopify__order_items
+    description: Staged Shopify order line items with product mapping
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+      - name: order_timestamp
+        tests:
+          - not_null

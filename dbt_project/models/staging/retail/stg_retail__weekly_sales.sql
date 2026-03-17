@@ -1,0 +1,45 @@
+with src as (
+    select * from {{ source('retail', 'raw_retail_weekly_sales') }}
+)
+
+select
+    cast(week_ending_date as date) as week_ending_date,
+    cast(fiscal_week as string) as fiscal_week,
+    cast(file_date as date) as file_date,
+    cast(upc as string) as upc,
+    cast(retailer_item_number as string) as retailer_item_number,
+    cast(item_description as string) as item_description,
+    cast(retail_price as float64) as retail_price,
+    cast(total_sales_ty_units as float64) as total_sales_ty_units,
+    cast(total_sales_ly_units as float64) as total_sales_ly_units,
+    cast(total_sales_units_chg_pct as float64) as total_sales_units_chg_pct,
+    cast(total_sales_ty_dollars as float64) as total_sales_ty_dollars,
+    cast(total_sales_ly_dollars as float64) as total_sales_ly_dollars,
+    cast(total_sales_dollars_chg_pct as float64) as total_sales_dollars_chg_pct,
+    cast(comp_sales_ty_units as float64) as comp_sales_ty_units,
+    cast(comp_sales_ly_units as float64) as comp_sales_ly_units,
+    cast(comp_sales_units_chg_pct as float64) as comp_sales_units_chg_pct,
+    cast(comp_sales_ty_dollars as float64) as comp_sales_ty_dollars,
+    cast(comp_sales_ly_dollars as float64) as comp_sales_ly_dollars,
+    cast(comp_sales_dollars_chg_pct as float64) as comp_sales_dollars_chg_pct,
+    cast(noncomp_sales_ty_units as float64) as noncomp_sales_ty_units,
+    cast(noncomp_sales_ly_units as float64) as noncomp_sales_ly_units,
+    cast(noncomp_sales_units_chg_pct as float64) as noncomp_sales_units_chg_pct,
+    cast(noncomp_sales_ty_dollars as float64) as noncomp_sales_ty_dollars,
+    cast(noncomp_sales_ly_dollars as float64) as noncomp_sales_ly_dollars,
+    cast(noncomp_sales_dollars_chg_pct as float64) as noncomp_sales_dollars_chg_pct,
+    cast(dotcom_sales_ty_units as float64) as dotcom_sales_ty_units,
+    cast(dotcom_sales_ly_units as float64) as dotcom_sales_ly_units,
+    cast(dotcom_sales_units_chg_pct as float64) as dotcom_sales_units_chg_pct,
+    cast(dotcom_sales_ty_dollars as float64) as dotcom_sales_ty_dollars,
+    cast(dotcom_sales_ly_dollars as float64) as dotcom_sales_ly_dollars,
+    cast(dotcom_sales_dollars_chg_pct as float64) as dotcom_sales_dollars_chg_pct,
+    cast(total_eoh_ty_units as float64) as total_eoh_ty_units,
+    cast(total_eoh_ly_units as float64) as total_eoh_ly_units,
+    cast(dc_eoh_ty_units as float64) as dc_eoh_ty_units,
+    cast(dc_eoh_ly_units as float64) as dc_eoh_ly_units,
+    cast(store_eoh_ty_units as float64) as store_eoh_ty_units,
+    cast(store_eoh_ly_units as float64) as store_eoh_ly_units,
+    cast(store_in_stock_pct as float64) as store_in_stock_pct
+
+from src

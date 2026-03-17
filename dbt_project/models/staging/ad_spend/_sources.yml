@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: ad_spend
+    database: analytics-eng-project
+    schema: dtc_analytics_raw
+    tables:
+      - name: raw_daily_ad_spend
+        description: Cross-platform daily ad spend (2019-2020)

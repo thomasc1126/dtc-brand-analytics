@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: facebook_ads
+    database: analytics-eng-project
+    schema: dtc_analytics_raw
+    tables:
+      - name: raw_facebook_ads_daily_campaigns
+        description: Facebook campaign-level daily metrics (2020)
+      - name: raw_facebook_ads_daily_account
+        description: Facebook account-level daily metrics (2019)
+      - name: raw_facebook_ads_monthly_adset
+        description: Facebook ad set monthly metrics (2019-2020)

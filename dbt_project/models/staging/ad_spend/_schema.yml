@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: stg_ad_spend__daily
+    description: Staged cross-platform daily ad spend
+    columns:
+      - name: platform
+        tests:
+          - not_null
+      - name: spend_date
+        tests:
+          - not_null

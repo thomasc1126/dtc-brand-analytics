@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: stg_retail__weekly_sales
+    description: Staged retail weekly sales by UPC
+    columns:
+      - name: week_ending_date
+        tests:
+          - not_null
+      - name: upc
+        tests:
+          - not_null

@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: stg_google_ads__search_keywords
+    description: Staged Google Ads search keyword performance
+    columns:
+      - name: report_month
+        tests:
+          - not_null
+      - name: keyword_category
+        tests:
+          - not_null
+
+  - name: stg_google_ads__shopping_products
+    description: Staged Google Ads shopping product performance
+    columns:
+      - name: report_month
+        tests:
+          - not_null
+      - name: item_id
+        tests:
+          - not_null

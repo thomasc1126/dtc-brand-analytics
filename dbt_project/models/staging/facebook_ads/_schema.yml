@@ -1,0 +1,29 @@
+version: 2
+
+models:
+  - name: stg_facebook_ads__daily_campaigns
+    description: Staged Facebook daily campaign metrics
+    columns:
+      - name: report_date_start
+        tests:
+          - not_null
+      - name: campaign_name
+        tests:
+          - not_null
+
+  - name: stg_facebook_ads__daily_account
+    description: Staged Facebook daily account metrics
+    columns:
+      - name: report_date_start
+        tests:
+          - not_null
+
+  - name: stg_facebook_ads__monthly_adset
+    description: Staged Facebook monthly ad set metrics
+    columns:
+      - name: ad_set_id
+        tests:
+          - not_null
+      - name: report_date
+        tests:
+          - not_null
