@@ -1,0 +1,23 @@
+# OS
+.DS_Store
+
+# Never commit source data or outputs
+source-data/
+*.csv
+!**/seeds/**/*.csv
+
+# This specific file has original brand names — never commit
+phase1/1.02-shopify-order-items/reference/product_mapping.csv
+
+# Python
+__pycache__/
+*.pyc
+.env
+venv/
+dbt-env/
+
+# dbt
+target/
+dbt_packages/
+logs/
+profiles.yml
