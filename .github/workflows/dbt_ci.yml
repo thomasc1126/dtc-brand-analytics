@@ -1,0 +1,52 @@
+name: dbt CI
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  dbt-build:
+    runs-on: ubuntu-latest
+
+    env:
+      DBT_PROFILES_DIR: .
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install dbt-bigquery
+        run: pip install dbt-bigquery
+
+      - name: Decode GCP keyfile
+        run: |
+          echo "${{ secrets.DBT_BIGQUERY_KEYFILE }}" | base64 -d > /tmp/gcp_keyfile.json
+
+      - name: Write profiles.yml
+        run: |
+          cat > dbt_project/profiles.yml <<'PROFILES'
+          dtc_brand_analytics:
+            target: ci
+            outputs:
+              ci:
+                type: bigquery
+                method: service-account
+                project: analytics-eng-project
+                dataset: dtc_analytics_ci
+                keyfile: /tmp/gcp_keyfile.json
+                threads: 4
+                timeout_seconds: 300
+                location: US
+          PROFILES
+
+      - name: Install dbt packages
+        run: dbt deps --project-dir dbt_project
+
+      - name: dbt build
+        run: dbt build --project-dir dbt_project
