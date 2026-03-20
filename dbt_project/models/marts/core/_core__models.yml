@@ -84,3 +84,61 @@ models:
                 values: ['hair_vitamins', 'sleep_vitamins', 'womens_multi_vitamins', 'hair_vitamins_vegan', 'lash_vitamins', 'teeth_whitening']
               config:
                 where: "product_mapping_status = 'matched'"
+
+  - name: fct_cohort_retention
+    description: >
+      Monthly cohort retention analysis. One row per cohort_month x months_since_first_order.
+      Shows how many customers from each acquisition cohort placed orders in subsequent months.
+    columns:
+      - name: cohort_retention_key
+        description: Surrogate key on cohort_month + months_since_first_order
+        tests:
+          - unique
+          - not_null
+      - name: cohort_month
+        tests:
+          - not_null
+      - name: retention_rate_pct
+        description: Percentage of cohort still active in this month
+
+  - name: fct_monthly_growth
+    description: >
+      Month-over-month growth rates for key business metrics. Built on fct_monthly_channel_overview
+      with LAG window functions for prior month comparisons.
+    columns:
+      - name: monthly_growth_key
+        description: Surrogate key on report_month
+        tests:
+          - unique
+          - not_null
+      - name: report_month
+        tests:
+          - not_null
+      - name: shopify_revenue_mom_pct
+        description: Shopify revenue month-over-month percentage change
+
+  - name: dim_customer_segments
+    description: >
+      RFM (recency, frequency, monetary) customer segmentation. Scores each customer 1-5
+      on recency, frequency, and monetary value, then assigns a segment label
+      (champion, loyal, new, at_risk, lost, etc.).
+    columns:
+      - name: customer_segment_key
+        description: Surrogate key on customer_id
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        tests:
+          - unique
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+      - name: customer_segment
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['champion', 'loyal', 'new', 'potential_loyalist', 'needs_attention', 'at_risk', 'about_to_lose', 'cant_lose_them', 'lost', 'other']
