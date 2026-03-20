@@ -25,3 +25,4 @@ select
     date_trunc(date_day, quarter) as quarter_start,
     concat(cast(extract(year from date_day) as string), '-Q', cast(extract(quarter from date_day) as string)) as year_quarter
 from dates
+-- CI test
