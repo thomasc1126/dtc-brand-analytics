@@ -44,6 +44,7 @@ jobs:
                 timeout_seconds: 300
                 location: US
           PROFILES
+          sed -i 's/^          //' dbt_project/profiles.yml
 
       - name: Install dbt packages
         run: dbt deps --project-dir dbt_project
