@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DBT_PROFILES_DIR: .
+      DBT_PROFILES_DIR: dbt_project
 
     steps:
       - name: Checkout repo
@@ -30,20 +30,7 @@ jobs:
 
       - name: Write profiles.yml
         run: |
-          cat > dbt_project/profiles.yml <<'PROFILES'
-          dtc_brand_analytics:
-            target: ci
-            outputs:
-              ci:
-                type: bigquery
-                method: service-account
-                project: analytics-eng-project
-                dataset: dtc_analytics_ci
-                keyfile: /tmp/gcp_keyfile.json
-                threads: 4
-                timeout_seconds: 300
-                location: US
-          PROFILES
+          printf 'dtc_brand_analytics:\n  target: ci\n  outputs:\n    ci:\n      type: bigquery\n      method: service-account\n      project: analytics-eng-project\n      dataset: dtc_analytics_ci\n      keyfile: /tmp/gcp_keyfile.json\n      threads: 4\n      timeout_seconds: 300\n      location: US\n' > dbt_project/profiles.yml
 
       - name: Install dbt packages
         run: dbt deps --project-dir dbt_project
