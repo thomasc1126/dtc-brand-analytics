@@ -47,6 +47,8 @@ flowchart LR
         dim_products[dim_products]
         fct_orders[fct_orders]
         fct_items[fct_order_items]
+        fct_cohort[fct_cohort_retention]
+        dim_segments[dim_customer_segments]
     end
 
     subgraph marts_mktg["Marts — Marketing (Tables)"]
@@ -57,6 +59,7 @@ flowchart LR
         fct_google_search_m[fct_google_ads_search_monthly]
         fct_google_shopping_m[fct_google_ads_shopping_monthly]
         fct_channel[fct_monthly_channel_overview]
+        fct_growth[fct_monthly_growth]
     end
 
     subgraph marts_retail["Marts — Retail (Tables)"]
@@ -115,4 +118,11 @@ flowchart LR
 
     %% Staging → Marts Retail
     stg_retail --> fct_retail
+
+    %% Additional Core mart edges
+    stg_orders --> fct_cohort
+    dim_customers --> dim_segments
+
+    %% Growth (from channel overview)
+    fct_channel --> fct_growth
 ```
