@@ -16,10 +16,30 @@ rfm_scores as (
         c.avg_order_value,
         c.is_repeat_customer,
         date_diff(rd.reference_date, cast(c.last_order_date as date), day) as days_since_last_order,
-        -- RFM scoring using ntile (1 = worst, 5 = best)
-        ntile(5) over (order by date_diff(rd.reference_date, cast(c.last_order_date as date), day) desc) as recency_score,
-        ntile(5) over (order by c.total_orders asc) as frequency_score,
-        ntile(5) over (order by c.total_revenue asc) as monetary_score
+        -- Recency: days since last order (explicit thresholds)
+        case
+            when date_diff(rd.reference_date, cast(c.last_order_date as date), day) <= 90 then 5
+            when date_diff(rd.reference_date, cast(c.last_order_date as date), day) <= 180 then 4
+            when date_diff(rd.reference_date, cast(c.last_order_date as date), day) <= 365 then 3
+            when date_diff(rd.reference_date, cast(c.last_order_date as date), day) <= 545 then 2
+            else 1
+        end as recency_score,
+        -- Frequency: order count (explicit thresholds)
+        case
+            when c.total_orders >= 5 then 5
+            when c.total_orders = 4 then 4
+            when c.total_orders = 3 then 3
+            when c.total_orders = 2 then 2
+            else 1  -- 1 order = lowest frequency score
+        end as frequency_score,
+        -- Monetary: total revenue (explicit thresholds)
+        case
+            when c.total_revenue >= 300 then 5
+            when c.total_revenue >= 150 then 4
+            when c.total_revenue >= 75 then 3
+            when c.total_revenue >= 30 then 2
+            else 1
+        end as monetary_score
     from customers as c
     cross join ref_date as rd
     where c.customer_id is not null
@@ -30,16 +50,16 @@ segmented as (
         *,
         recency_score + frequency_score + monetary_score as rfm_total,
         case
-            when recency_score >= 4 and frequency_score >= 4 then 'champion'
-            when recency_score >= 4 and frequency_score >= 2 then 'loyal'
-            when recency_score >= 4 and frequency_score = 1 then 'new'
-            when recency_score = 3 and frequency_score >= 3 then 'potential_loyalist'
-            when recency_score = 3 and frequency_score <= 2 then 'needs_attention'
-            when recency_score = 2 and frequency_score >= 3 then 'at_risk'
-            when recency_score = 2 and frequency_score <= 2 then 'about_to_lose'
-            when recency_score = 1 and frequency_score >= 3 then 'cant_lose_them'
-            when recency_score = 1 and frequency_score <= 2 then 'lost'
-            else 'other'
+            when recency_score = 5 and frequency_score >= 4 then 'champions'
+            when recency_score in (3, 4) and frequency_score >= 4 then 'loyal_customers'
+            when recency_score in (1, 2) and frequency_score >= 4 then 'cant_lose_them'
+            when recency_score in (4, 5) and frequency_score = 3 then 'potential_loyalists'
+            when recency_score = 3 and frequency_score = 3 then 'need_attention'
+            when recency_score in (1, 2) and frequency_score = 3 then 'at_risk'
+            when recency_score = 5 and frequency_score in (1, 2) then 'new_customers'
+            when recency_score = 4 and frequency_score in (1, 2) then 'promising'
+            when recency_score = 3 and frequency_score in (1, 2) then 'about_to_sleep'
+            when recency_score in (1, 2) and frequency_score in (1, 2) then 'hibernating'
         end as customer_segment
     from rfm_scores
 )
